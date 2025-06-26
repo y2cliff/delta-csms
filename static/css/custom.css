@@ -1,0 +1,217 @@
+
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --nav-item-bg: #f8f9fa;
+    --sidebar-text: #0F52BA;
+    --bar-color: #ffffff;
+}
+
+.dark-mode {
+    --bg-color: #181818;
+    --text-color: #ffffff;
+    --bar-color: #232323;
+    --sidebar-text: #ffffff;
+    --nav-item-bg: #2a2a2a;
+}
+
+html {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.dark-mode .header {
+    background-color: var(--bar-color);
+    color: var(--text-color);
+}
+
+.sidebar, .sidebar-nav .nav-item .nav-link {
+    background-color: var(--nav-item-bg);
+    color: var(--sidebar-text);
+}
+
+.sidebar-nav .nav-item a,
+.dark-mode .header-nav .nav-profile,
+.dark-mode .profile .profile-overview .card-title,
+.dark-mode .footer .copyright,
+.dark-mode .footer .credits  {
+    color: var(--sidebar-text);
+}
+
+.dark-mode .sidebar-nav .nav-item a:hover {
+    background-color: #333333; 
+}
+
+.main, .footer {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.dark-mode .card {
+  background-color: #212529 !important;
+  color: #fff !important;
+  transition: none;
+}
+
+.dark-mode .nav-tabs-bordered .nav-link.active {
+    background-color: #3d3d3d; 
+}
+
+.dark-mode .info-card h6,
+.dark-mode .profile .profile-card h2,
+.dark-mode .logo span {
+  color: #ffcf40;
+}
+
+.dark-mode .card-header,
+.dark-mode .card-footer,
+.dark-mode .tab-pane {
+  background-color: #212529 !important;
+  color: #fff !important;
+}
+
+.dark-mode table,
+.dark-mode .datatable-table {
+  background-color: #222 !important;
+  color: #fff;
+  border-color: #444;
+  transition: none;
+}
+
+.dark-mode thead,
+.dark-mode .datatable-table thead {
+  background-color: #333 !important;
+  color: #fff;
+}
+
+.dark-mode tbody tr,
+.dark-mode .datatable-table tbody tr {
+  background-color: #2a2a2a !important;
+  color: #ddd;
+}
+
+.dark-mode th, .dark-mode td,
+.dark-mode .datatable-table th, .dark-mode .datatable-table td {
+  border-color: #444 !important;
+}
+
+.dark-mode .col-form-label,
+.dark-mode .card-title,
+.dark-mode .pagetitle h1,
+.dark-mode .header .toggle-sidebar-btn,
+.dark-mode .header-nav .nav-icon,
+.dark-mode .nav-tabs .nav-link,
+.dark-mode .profile .profile-card .social-links a,
+.dark-mode .profile .profile-edit label {
+  color: #0087ff;
+}
+
+.dark-mode .select2-container--default .select2-selection--single,
+.dark-mode .select2-container--bootstrap-5 .select2-selection {
+    background-color: #212529;
+    color: #fff;
+    border-color: #444;
+}
+
+.dark-mode .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered .select2-selection__placeholder {
+    color: #fff;
+}
+
+.dark-mode .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    background-color: #212529;
+    color: #fff;
+}
+
+.dark-mode .select2-dropdown {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode .select2-search__field {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-mode .select2-results__option {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode .selector {
+    border-color: #444;
+}
+
+.dark-mode .fc-theme-bootstrap5-shaded {
+    background-color: #343a40;
+}
+
+.col-form-label.requiredField {
+    color: red;
+}
+
+.selector {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    padding: 2rem;
+}
+
+.selector h2 {
+  margin-bottom: 0;
+  font-size: 18px
+}
+
+
+.selector .selector-filter {
+    border: 1px solid var(--border-color);
+    border-width: 0 1px;
+    padding: 8px;
+    color: var(--body-quiet-color);
+    font-size: 0.825rem;
+    margin: 0;
+    text-align: left;
+    display: flex;
+}
+
+
+.selector select {
+    font-size: 1rem;
+}
+
+
+.select2-container {
+    width:100!important;
+    position: relative; 
+}
+
+.clear-select2 {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 34px;
+    transform: translateY(-50%);
+    z-index: 10;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.clear-select2:hover { 
+    background-color: transparent;
+    color: gray;
+}
+
+@media (max-width: 767px) {
+    /* Selector */
+
+    .selector ul.selector-chooser {
+        display: inline-flex;
+        float: none;
+        width: 56px;
+        height: 26px;
+        padding: 0 2px;
+        margin: 15px auto 20px;
+        transform: none;
+    }
+}
+
+
