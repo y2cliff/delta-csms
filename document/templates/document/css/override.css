@@ -1,0 +1,28 @@
+<style>
+#id_document_file {
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  margin: 0 15px 0 12px;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 767px){
+    #id_document_file {
+      margin: 0 10px 10px 0;
+    }
+
+    button {
+      margin: 0 0 0 0;
+      flex: 1 1 auto;
+    }
+}
+
+
+
+@media (max-width: 767px) and (orientation: landscape){
+    #id_document_file {
+      margin: 0 15px 0 12px;
+    }
+}
+</style>

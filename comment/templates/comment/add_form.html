@@ -1,0 +1,18 @@
+{% load i18n %}
+
+{% if form %}
+<form class="form-inline" method="post" action="{{ form_url }}">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}"/>
+  <textarea name="message" rows="4" cols="150" style="box-sizing: border-box;
+  max-width: 100%;" required id="id_message" 
+    placeholder="Type your comments here"></textarea>
+    <div class="text-center">
+  <button class="btn btn-outline-primary btn-sm" type="submit" value="{% trans "Add post" %}">
+    <i class="bi bi-upload"></i> Post Comment
+  </button>
+</div>
+</form>
+
+
+{% endif %}

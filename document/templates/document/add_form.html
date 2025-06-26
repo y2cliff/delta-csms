@@ -1,0 +1,24 @@
+{% load i18n %}
+{% if form %}
+  <form class="form-inline" method="post" enctype="multipart/form-data" action="{{ form_url }}">
+    {% csrf_token %}
+    <div class="row mb-3">
+    <input type="hidden" name="next" value="{{ next }}"/>
+    <label for="id_document_file" class="col-md-1 col-form-label">File:</label>
+    <div class="col-lg-8 col-md-10 col-sm-12">
+    <input class="form-control" type="file" name="document_file" required id="id_document_file" multiple>
+    </div>
+    <div class="col-md-2">
+    <button class="btn btn-outline-primary btn-sm" type="submit" value="{% trans "Add document" %}">
+      <i class="bi bi-upload"></i> Upload
+    </button>
+    </div>
+    </div>
+    <div class="row mb-3">
+    <small class="col-12 form-text text-muted"><ul>
+      <li>Maximum size of {{ max_size }} MB</li>
+      <li>File Types: {{ file_types }}</li>
+    </ul></small>
+  </div>
+  </form>
+{% endif %}

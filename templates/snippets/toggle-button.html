@@ -1,0 +1,7 @@
+<button id="follow-button-{{ object.id }}" class="btn btn-outline-info btn-sm" data-object-id="{{ object.id }}" data-app-name="{{ app }}" data-model-name="{{ model }}">
+  {% if request.user in object.followers.all %}
+    <i class="bi bi-person-dash-fill"></i> Unfollow
+  {% else %}
+    <i class="bi bi-person-plus-fill"></i> Follow
+  {% endif %}
+</button>

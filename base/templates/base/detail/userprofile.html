@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block main %}
+{{ block.super }}
+
+<section class="section">
+  <div class="row">
+  <div class="col-lg-12">
+
+  <!-- Default Card -->
+  <div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{ object }} : 
+      <a href="update/" data-bs-toggle="tooltip" data-bs-placement="right" title="Edit Info"> 
+      <i class="bi bi-pencil-square"></i></a>
+    </h5>
+    <!-- Bordered Tabs -->
+    <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+      {% include 'snippets/bordered-tab-li.html' with active='active' tabId='info' %}
+      {% include 'snippets/bordered-tab-li.html' with tabId='menu' %}
+      {% include 'snippets/bordered-tab-li.html' with tabId='documents' %}
+      {% include 'snippets/bordered-tab-li.html' with tabId='comments' %}
+    </ul>
+
+<!-- Tabs -->
+    <div class="tab-content pt-2" id="borderedTabContent">
+  
+<!-- Info Tab -->
+      <div class="tab-pane fade show active" id="card-info" role="tabpanel" aria-labelledby="info-tab">
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">User:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.user }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">E-mail:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.user.email }}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">First Name:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.user.first_name }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Last Name:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.user.last_name }}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Company:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.company }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Job:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.job }}" disabled="">
+        </div>
+      </div>
+      </div><!-- End Info Tab -->
+
+<!-- Menu Tab -->
+    <div class="tab-pane fade" id="card-menu" role="tabpanel" aria-labelledby="menu-tab">
+      <table class="table datatable table-striped  w-100 d-block d-md-table">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Menu Type</th>
+            <th>Name</th>
+            <th>Url Name</th>
+            <th>Icon Class</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for menu in object.menu.all %}
+          <tr>
+            <td><a href="{% url 'menu-detail' menu.id%} ">{{ menu.module|title }}</a></td>
+            <td>{{ menu.menu_type }}</td>
+            <td>{{ menu.name }}</td>
+            <td>{{ menu.url_name }}</td>
+            <td>{{ menu.icon_class }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>  
+      </table>
+
+    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="btn-group" role="group" aria-label="Left group">
+        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#download-modal">
+        <i class="bi bi-save me-1"></i> Load all Menu</button>
+      </div>
+
+      <div class="btn-group" role="group" aria-label="Right group">
+        <button type="button" class="btn btn-outline-primary" onclick="location.href='{{ request.path }}usermenuorder/create'">
+        <i class="bi bi-floppy"></i> Add User Menu </button>
+      </div>
+    </div>
+    </div><!-- End Menu Tab -->
+    
+<!-- Document Tab -->
+  {% include 'document/snippets/document.html' with object=object %}<!-- End Document Tab -->
+<!-- Comment Tab -->
+  {% include 'comment/snippets/comment.html' with object=object %} <!-- End Comment Tab -->
+</div> <!-- End Tabs -->
+
+  </div><!-- End Default Card -->
+
+<div class="modal fade" id="download-modal" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">This will load all Menu to this User</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form action="" method="POST">
+      {% csrf_token %}
+      <button type="submit" name="download" class="btn btn-outline-primary">
+      <i class="bi bi-floppy me-1"></i> Yes</button>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+
+  </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="https://unpkg.com/htmx.org@1.9.2" 
+    integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" 
+  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" 
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="  
+  crossorigin="anonymous"></script>
+{% endblock%}

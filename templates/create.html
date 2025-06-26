@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block base_css %}
+  {{ block.super }}
+  {% comment %}
+  <link href="{% static 'admin/css/responsive.css' %}" rel="stylesheet">
+  {% endcomment %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+{% endblock %}
+
+{% load crispy_forms_tags %}
+  <script type="text/javascript" src="{% url 'jsi18n' %}" > </script>
+  {{ form.media }}
+  
+
+{% block main %}
+{{ block.super }}
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"></h5>
+  {% crispy form %}
+  </div>
+</div>
+{% endblock %}
+{% block base_js %}
+  {{ block.super }}
+  <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="{% static 'js/override.js' %}"></script>
+{% endblock %}

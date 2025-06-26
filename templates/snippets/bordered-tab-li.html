@@ -1,0 +1,6 @@
+<li class="nav-item" role="presentation">
+  <button class="nav-link {{ active }}" id="{{ tabId }}-tab" data-bs-toggle="tab" data-bs-target="#card-{{ tabId }}" type="button" role="tab" aria-controls="{{ tabId }}" 
+  aria-selected="{% if active == 'active' %}  'true' {% else %} 'false' {% endif %}">
+  {% if alt_title %} {{ alt_title|title }} {% else %} {{ tabId|title }} {% endif %}
+  </button>
+</li>

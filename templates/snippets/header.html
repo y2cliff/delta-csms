@@ -1,0 +1,165 @@
+{% load static %}
+
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="{% url 'home'%}" class="logo d-flex align-items-center">
+      <img src="{% static 'img/xlogo.png'%}" alt=""> 
+      <span class="d-none d-lg-block">DELTA</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+    {% comment %}
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+      {% csrf_token %}
+      <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+      <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+    </form>
+    {% endcomment %}
+  </div><!-- End Search Bar -->
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+      <li class="nav-item d-block d-lg-none">
+        <a class="nav-link nav-icon search-bar-toggle " href="#">
+          <i class="bi bi-search"></i>
+        </a>
+      </li>
+      <!-- End Search Icon-->
+      {% comment %}
+      {% endcomment %}
+      <li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <i class="bi bi-bell"></i>
+          {% if notifs.get_all_unread %}
+          <span class="badge bg-primary badge-number">{{ notifs.get_all_unread.count }}</span>
+          {% endif %}
+        </a>
+        <!-- End Notification Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+          <li class="dropdown-header">
+            You have {{ notifs.get_all_unread.count }} new notifications
+            {% if notifs.get_all_unread %}
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+            {% endif %}
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          {% for notif in notifs.get_all_unread %}
+            <li class="notification-item">
+              <i class="{{ notif.get_notif_type_display }}"></i>
+              <div>
+                <h4>{{ notif.subject }}</h4>
+                <p>{{ notif.message | truncatewords:7 }}</p>
+                <p>{{ notif.created_on | timesince }} ago</p>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+          {% endfor %}
+
+          <li class="dropdown-footer"><a href="">Show all notifications</a></li>
+        </ul><!-- End Notification Dropdown Items -->
+
+        </li><!-- End Notification Nav -->
+
+        <li class="nav-item dropdown">
+
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-chat-left-text"></i>
+
+            {% if received_messages.get_all_unread %}
+            <span class="badge bg-success badge-number">
+              {{ received_messages.get_all_unread.count }}
+            </span>
+            {% endif %}
+          </a><!-- End Messages Icon -->
+
+
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+            <li class="dropdown-header">
+              You have {{ received_messages.get_all_unread.count }} new messages
+              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            {% for message in received_messages.get_all_unread %}
+            <li class="message-item">
+              <a href="#">
+                {% if message.sender.userprofile.image_file %}
+                <img src="{{ message.sender.userprofile.image_file.url }}" alt="" class="rounded-circle">
+                {% else %}
+                <img src="{% static 'img/logo.png'%}" alt="" class="rounded-circle">
+                {% endif %}
+                <div>
+                  <h4>{{ message.sender.get_full_name}}</h4>
+                  <p>{{ message.message|truncatewords:7}}</p>
+                  <p>{{ message.date_sent|timesince }} ago</p>
+                </div>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            {% endfor %}
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li class="dropdown-footer"><a href="">Show all messages</a></li>
+          </ul><!-- End Messages Dropdown Items -->
+        </li><!-- End Messages Nav -->
+        <li class="nav-item dropdown pe-3">
+          
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+          {% if user.profile.image_file %}
+          <img src="{{ user.profile.image_file.url }}" alt="Profile" class="rounded-circle">
+          {% else %}
+          <img src="{% static 'img/logo.png'%}" alt="Profile" class="rounded-circle">
+          {% endif %}
+          <span class="d-none d-md-block dropdown-toggle ps-2">{{ user.get_full_name }}</span>
+        </a><!-- End Profile Image Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li class="dropdown-header">
+            <h6>{{ user.get_full_name|title }}</h6>
+            <span>{{ user.profile.job}}</span>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{% url 'my-profile' %}">
+              <i class="bi bi-person"></i><span>My Profile</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          {% if user.is_superuser %}
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{% url 'admin:index'%}" target="_blank">
+              <i class="bi bi-gear"></i>
+              <span>Site Administration</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+         {% endif %}
+          
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{% url 'pages-faq'%}">
+              <i class="bi bi-question-circle"></i><span>Need Help?</span>
+            </a>
+          </li>
+
+          <li><hr class="dropdown-divider"></li>
+
+        
+          
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+              <i class="bi bi-box-arrow-right"></i><span>Sign Out</span>
+            </a>
+          </li>
+        </ul><!-- End Profile Dropdown Items -->
+      </li><!-- End Profile Nav -->
+    </ul>
+  </nav><!-- End Icons Navigation -->
+</header><!-- End Header -->

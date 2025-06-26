@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+
+<h3> {{ object.name }} </h3></br>
+{% include 'document/snippets/document.html' with object=object %}
+{% endblock %}

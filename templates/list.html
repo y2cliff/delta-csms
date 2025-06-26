@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load django_tables2 %}
+{% load static %}
+
+{% block main %}
+{{ block.super }}
+
+<div class="table-responsive">
+{% render_table table %}
+</div>
+
+<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group" role="group" aria-label="Left group">
+		<button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#download-modal">
+		<i class="bi bi-save me-1"></i> Download</button>
+  </div>
+{% if can_add %}
+	<div class="btn-group" role="group" aria-label="Right group">
+		{% comment %}
+		<button type="button" class="btn btn-outline-primary" onclick="location.href='{{ request.path }}create'">
+		{% endcomment %}
+		<a href="{{ request.path }}create" class="btn btn-outline-primary btn-sm"><i class="bi bi-plus-square"></i> Create New</a>
+  </div>
+{% endif %}
+
+</div>
+
+<div class="modal fade" id="download-modal" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+	<div class="modal-header">
+		<h5 class="modal-title">Download to File</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	</div>
+	<div class="modal-body">
+		<form action="" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit" name="download" class="btn btn-outline-primary btn-sm">
+			<i class="bi bi-floppy me-1"></i> Save</button>
+		</form>
+	</div>
+</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+  {% include 'js/toggle-follow.js'%}
+{% endblock%}

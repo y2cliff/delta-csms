@@ -1,0 +1,47 @@
+{% load static %}
+{% load comment_tags%}
+
+
+
+{% get_posts_for object as object_posts %}
+<div class="tab-pane fade" id="card-comments" role="tabpanel" aria-labelledby="comments-tab">
+<div class="card">
+  <h5 class="card-header">Comments</h5>
+  <div class="card-body">
+    {% if object_posts %}
+    <div class="table-responsive-md">
+    <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th>Post</th>
+            <th>Posted By</th>
+            <th>Posted Date</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in object_posts %}
+          <tr>
+            <td class="col-sm-8"><pre>{{ post.message }}</pre></td>
+            <td class="col-sm-2"><pre>{{ post.created_by }}</pre></td>
+            <td class="col-sm-1"><pre>{{ post.created_at }}</pre></td>
+            <td class="col-sm-1">{% post_delete_link post %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}  
+      <p> No posts</p>
+    {% endif %}
+   </div>
+  <div class="card-footer">   
+    {% comment %}
+    <p class="card-text">Number of attached documents: {% documents_count object %}</p>
+    {% endcomment %}
+    {% post_form object %}
+  </div>
+</div>
+
+<script src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.js' %}"></script>

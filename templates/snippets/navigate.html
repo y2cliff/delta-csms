@@ -1,0 +1,24 @@
+<div class="card-footer text-center">
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <a href="{% url 'first_record' app model %}" >
+      <button type="button" class="btn btn-outline-secondary btn-sm">
+       <i class="bi bi-double-chevron-left"></i> First</button>
+    </a>
+    <a href="{% url 'previous_record' app model object.id %}" >
+      <button type="button" class="btn btn-outline-secondary btn-sm">
+       <i class="bi bi-chevron-left"></i> Previous</button>
+    </a>
+    <a>
+      <button type="button" class="btn btn-outline-secondary btn-sm disabled">
+      {{ page_title|title }}: {{ object.code }}</button>
+    </a>
+    <a href="{% url 'next_record' app model object.id %}" >
+      <button type="button" class="btn btn-outline-secondary btn-sm">
+        Next <i class="bi bi-chevron-right"></i></button>
+    </a>
+    <a href="{% url 'last_record' app model %}" >
+      <button type="button" class="btn btn-outline-secondary btn-sm">
+        Last <i class="bi bi-double-chevron-right"></i></button>
+    </a>
+  </div>
+</div>

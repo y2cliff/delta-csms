@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block pagetitle %}
+  DEI - Menu
+{% endblock %}
+
+{% block main %}
+{{ block.super }}
+
+<section class="section">
+  <div class="row">
+  <div class="col-lg-12">
+
+  <!-- Default Card -->
+  <div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Menu - {{ object.name }} : 
+    <a href="update/" data-bs-toggle="tooltip" data-bs-placement="right" title="Edit Info"> <i class="bi bi-pencil-square"></i></a>
+    </h5>
+    <!-- Bordered Tabs -->
+    <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+      {% include 'snippets/bordered-tab-li.html' with active='active' tabId='info' %}
+      {% include 'snippets/bordered-tab-li.html' with tabId='documents' %}
+      {% include 'snippets/bordered-tab-li.html' with tabId='comments' %}
+    </ul>
+<!-- Tabs -->
+    <div class="tab-content pt-2" id="borderedTabContent">
+<!-- Info Tab -->
+      <div class="tab-pane fade show active" id="card-info" role="tabpanel" aria-labelledby="info-tab">
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Module:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.module|title }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Menu Type:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.menu_type }}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Name:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.name }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Sequence:</label>
+        <div class="col-sm-2">
+        <input type="text" class="form-control" value="{{ object.sequence }}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Url Name:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.url_name }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Icon Class:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.icon_class }}" disabled="">
+        </div>
+      </div>
+      </div><!-- End Info Tab -->
+
+<!-- Document Tab -->
+  {% include 'document/snippets/document.html' with object=object %}<!-- End Document Tab -->
+<!-- Comment Tab -->
+  {% include 'comment/snippets/comment.html' with object=object %} <!-- End Comment Tab -->
+    </div><!-- End Bordered Tabs -->
+  
+  </div>
+  </div><!-- End Default Card -->
+  
+  </div>
+  </div>
+</section>
+{% endblock %}

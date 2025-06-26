@@ -1,0 +1,75 @@
+{% load static %}
+{% load document_tags%}
+{% get_documents_for object as object_attachments %}
+{% if object_related %}
+  {% get_documents_for object_related as object_related_attachments %}
+{% endif %}
+{% include 'document/css/override.css' %}
+
+<div class="tab-pane fade" id="card-documents" role="tabpanel" aria-labelledby="documents-tab">
+<div class="card">
+  <h5 class="card-header">Attached Documents</h5>
+  <div class="card-body">
+    {% if object_attachments %}
+    <div class="table-responsive-md">
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th class="py-0">FileName</th>
+            <th class="py-0">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for document in object_attachments %}
+          <tr>
+            <td class="col-sm-10">
+              {% if document.document_file.url|lower|slice:"-4:" in ".jpg .png .gif" %}
+              <img src="{{ document.document_file.url }}" style="width:50px; height:auto;">
+              {% elif document.document_file.url|lower|slice:"-4:" in ".pdf" %}
+              <img src="{% static 'img/file_earmark_pdf.png' %}" style="width:30px; height:auto;">
+              {% endif %}
+              <a href="{{ document.document_file.url }}" target="_blank">{{ document.filename }}</a>
+            </td>
+            <td class="col-sm-2">{% document_delete_link document %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}  
+      <p class="ml-1">No documents</p>
+    {% endif %}
+    {% if object_related_attachments %}
+    <div class="table-responsive-md">
+    <table class="table">
+        <thead class="thead-light">
+          <tr><th class="py-0">Related Documents</th></tr>
+        </thead>
+        <tbody>
+          {% for document in object_related_attachments %}
+          <tr>
+            <td class="col-sm-10">
+              <a href="{{ document.document_file.url }}" target="_blank">
+              {{ document.filename }}</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% elif object_related %}  
+      <p class="ml-1" >No related documents</p>
+    {% endif %}
+   </div>
+  <div class="card-footer">   
+    {% comment %}
+    <p class="card-text">Number of attached documents: {% documents_count object %}</p>
+    {% endcomment %}
+    <div class="row">
+    <div class="col-sm-12">
+    {% document_form object %}
+  </div>
+</div>
+  </div>
+</div>
+</div>
+
