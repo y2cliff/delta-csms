@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load custom_tags %}
+
+
+
+{% block main %}
+{{ block.super }}
+
+<section class="section dashboard">
+<div class="row">
+
+<!-- Productvity Card -->
+<div class="col-lg-4 col-md-6">
+<div class="card info-card revenue-card">
+
+  {% comment %}
+  <div class="filter">
+    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+      <li class="dropdown-header text-start">
+        <h6>Filter</h6>
+      </li>
+    <li><a class="dropdown-item"  
+        hx-get="{% url 'project:productivity' %}?timeframe=this_month"  
+        hx-target="#productivity"  
+        hx-swap="innerHTML"
+        hx-on::after-request="document.getElementById('timeframe-label').innerText=' | This Month' ;">
+        This Month</a></li>
+    <li><a class="dropdown-item"  
+        hx-get="{% url 'project:productivity' %}?timeframe=this_year"  
+        hx-target="#productivity"  
+        hx-swap="innerHTML"
+        hx-on::after-request="document.getElementById('timeframe-label').innerText=' | This Year' ;">
+        This Year</a></li>
+   <li><a class="dropdown-item"
+        hx-get="{% url 'project:productivity' %}?timeframe=all_time"
+        hx-target="#productivity"
+        hx-swap="innerHTML"
+        hx-on::after-request="document.getElementById('timeframe-label').innerText=' | All Time' ;">
+        All Time</a></li>
+    </ul>
+  </div>
+  {% endcomment %}
+
+  <div class="card-body">
+  <h5 class="card-title">Productivity<span id="timeframe-label"> | This Month</span></h5>
+  <div class="d-flex align-items-center">
+    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+      <a href="{% url 'home' %}"><i class="bi bi-speedometer2"></i></a>
+    </div>
+    <div class="ps-3">
+      {% comment %}
+      <div id="productivity"
+        hx-get="{% url 'project:productivity' %}?timeframe=this_month"
+        hx-trigger="load"
+        hx-swap="innerHTML">
+        Loading ...
+      </div>
+      {% endcomment %}
+      <h6>{{ user.project_dashboard.get_productivity|floatformat:2|intcomma }}%</h6>
+      <span class="text-muted small pt-2 ps-1">Work Hrs / Sched & OT Hrs</span>
+    </div>
+  </div>
+  </div>
+
+</div>
+</div><!-- End Productivity Card -->
+
+<!-- Efficiency Card -->
+<div class="col-lg-4 col-md-6">
+<div class="card info-card revenue-card">
+
+  <div class="card-body">
+  <h5 class="card-title">Efficiency<span> | this month</span></h5>
+  <div class="d-flex align-items-center">
+    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+      <a href="{% url 'home' %}"><i class="bi bi-graph-up"></i></a>
+    </div>
+    <div class="ps-3">
+      <h6>{{ efficiency|floatformat:2|intcomma }}</h6>
+      <h6>{{ user.project_dashboard.get_efficiency|floatformat:2|intcomma }}%</h6>
+      <span class="text-muted small pt-2 ps-1">Benchmark Hrs / Work Hrs</span>
+    </div>
+  </div>
+  </div>
+
+</div>
+</div><!-- End Efficiency Card -->
+
+<!-- Proficiency Card -->
+<div class="col-lg-4 col-md-6">
+<div class="card info-card revenue-card">
+
+  <div class="card-body">
+  <h5 class="card-title">Proficiency<span> | this month</span></h5>
+  <div class="d-flex align-items-center">
+    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+      <a href="{% url 'home' %}"><i class="bi bi-award"></i></a>
+    </div>
+    <div class="ps-3">
+      <h6>{{ user.project_dashboard.get_proficiency|floatformat:2|intcomma }}%</h6>
+      <span class="text-muted small pt-2 ps-1"> Productivity x Efficiency %</span>
+    </div>
+  </div>
+  </div>
+
+</div>
+</div><!-- End Proficiency Card -->
+
+<!-- Left side columns -->
+<div class="col-lg-8">
+<div class="row">
+
+<!-- Activity Card-->
+<div class="col-12">
+<div class="card">
+  <div class="card-body">
+  <h5 class="card-title">List of followed Activities</h5>
+  <div class="table-responsive">
+    <table class="table datatable table-striped table-sm">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Site</th>
+        <th>Start Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for activity in user.activity_followers.all %}
+    <tr>
+    <td><a href="{% url 'project:activity-detail' activity.id %}">{{ activity.code }}</a></td>
+    <td>{{ activity.name }}</td>
+    <td>{{ activity.site.code }}</td>
+    <td>{{ activity.start_date }}</td>
+    <td>Open</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  </div>
+</div>
+</div><!-- End Activity Card -->
+
+<!-- Task Card -->
+<div class="col-12">
+<div class="card info-card customers-card">
+  <div class="card-body">
+  <h5 class="card-title">List of followed Tasks</h5>
+  <div class="table-responsive">
+    <table class="table datatable table-striped table-sm">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Start Date</th>
+        <th>Leader</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for task in user.task_followers.all %}
+    <tr>
+    <td><a href="{% url 'project:task-detail' task.id %}">{{ task.code }}</a></td>
+    <td>{{ task.name }}</td>
+    <td>{{ task.start_date }}</td>
+    <td>{{ task.leader }}</td>
+    <td>Open</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  </div>
+</div>
+</div><!-- End Task Card -->
+
+</div>
+</div><!-- End Left Side Column -->
+
+<!-- Right Side Column -->
+<div class="col-lg-4">
+<div class="row">
+
+  <div class="card">
+    <div class="card-body">
+    <h5 class="card-title">Timekeeper Log<span> | this month</span></h5>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Record</th>
+          <th scope="col">Hours</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><i class="bi bi-clock"></i> Schedule</th>
+          <td>{{ user.project_dashboard.get_schedule|floatformat:2 }} Hrs</td>
+          <td>{% if top_schedule %} <i class='bi bi-trophy'> {% endif %}</td>
+        </tr>
+        <tr>
+          <th scope="row"><i class="bi bi-moon-stars"></i> Overtime</th>
+          <td>{{ user.project_dashboard.get_overtime|floatformat:2 }} Hrs</td>
+          <td>{% if top_overtime %} <i class='bi bi-trophy'> {% endif %}</td>
+        </tr>
+        <tr>
+          <th scope="row"><i class="bi bi-house-exclamation"></i> Off Duty</th>
+          <td>{{ user.project_dashboard.get_offduty|floatformat:2 }} Hrs</td>
+          <td>{% if top_offduty %} <i class='bi bi-trophy'> {% endif %}</td>
+        </tr>          
+        <tr>
+          <th scope="row"><i class="bi bi-wrench"></i> Work</th>
+          <td>{{ user.project_dashboard.get_work|floatformat:2 }} Hrs</td>
+          <td>{% if top_work %} <i class='bi bi-trophy'> {% endif %}</td>
+        </tr>
+        <tr>
+          <th scope="row"><i class="bi bi-cpu"></i> Benchmark</th>
+          <td>{{ user.project_dashboard.get_benchmark|floatformat:2 }} Hrs</td>
+          <td>{% if top_benchmark %} <i class='bi bi-trophy'> {% endif %}</td>
+        </tr>
+        <tr>
+          <th scope="row"><i class="bi bi-airplane"></i> Travel</th>
+          <td>{{ user.project_dashboard.get_travel|floatformat:2 }} Hrs</td>
+          <td>{% if top_travel %} <i class='bi bi-trophy'> {% endif %}</td>
+        </tr> 
+        <tr>
+          <th scope="row"><i class="bi bi-suitcase"></i> Leave</th>
+          <td>{{ user.project_dashboard.get_leave|floatformat:2 }} Hrs</td>
+          <td>{% if top_leave %} <i class='bi bi-trophy'> {% endif %}</td>
+        </tr> 
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+<!-- Budget Report -->
+  <div class="card">
+    <div class="card-body pb-0">
+      <h5 class="card-title">Category Breakdown<span>| All Time</span></h5>
+      <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
+    </div>
+  </div><!-- End Budget Report -->
+
+</div>
+</div><!-- End Right Side Column -->
+
+</div>
+</section>
+
+{% endblock %}
+{% block extra_js %}
+  <script src="https://unpkg.com/htmx.org@2.0.4" 
+  integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" 
+  crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.js" 
+  integrity="sha384-oeUn82QNXPuVkGCkcrInrS1twIxKhkZiFfr2TdiuObZ3n3yIeMiqcRzkIcguaof1" 
+  crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" 
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="  
+  crossorigin="anonymous"></script>
+  {% include 'project/chart.js' %}
+  {% include 'js/table-responsive.js' %}
+{% endblock %}

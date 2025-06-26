@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load django_tables2 %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+
+{% block main %}
+  {% block sidebar %} {% include 'project/snippets/sidebar.html'%} {% endblock %}
+  {% render_table table %}
+  <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group" role="group" aria-label="Left group">
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#download-modal">
+    <i class="bi bi-save me-1"></i> Download</button>
+  </div>
+  <div class="modal fade" id="download-modal" tabindex="-1">
+  <div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Download to File</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ dform.as_p }}
+        <button type="submit" name="download" class="btn btn-primary">
+        <i class="bi bi-floppy me-1"></i> Save</button>
+      </form>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div class="btn-group" role="group" aria-label="Right group">
+    {% load custom_tags %}
+<!--OPEN MODAL BUTTON-->
+<div class="modal-footer">
+  <button type="button" class="btn btn-info " data-bs-toggle="modal" data-bs-target="#createnew">
+  <i class="{% get_setting 'PLEDGE_ADD_ICON' %}"></i> Add New Pledge Card </button>
+</div><!-- END OPEN MODAL -->
+<!--CREATE MODAL-->
+<div class="modal fade" id="createnew" tabindex="-1">
+<div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Add New Pledge Card</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+    </button>
+  </div>
+  <div class="modal-body">
+    {% crispy dform %}
+  </div>
+</div>
+</div>
+</div> <!-- END CREATE MODAL -->
+
+  </div>
+  </div>
+{% endblock %}

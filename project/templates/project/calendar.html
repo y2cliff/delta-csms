@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+    {% comment %}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.8/index.global.min.js"></script>
+    {% endcomment %} 
+    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.17/index.global.min.js'></script>
+
+    
+    <style>
+        .view-buttons {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar')
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            themeSystem: 'bootstrap5',
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,listWeek'
+            },
+            footerToolbar: {
+                center: 'openLinkButton'
+            },
+            customButtons: {
+                openLinkButton: {
+                    text: 'Add New Activity',
+                    buttonClass: 'btn btn-outline-primary',
+                    click: function() {
+                        window.location.href = "{% url 'project:activity-create' %}";
+                        // window.open("{% url 'project:activity-create' %}");
+
+                    }
+                }
+            },
+            contentHeight: 'auto',
+            handleWindowResize: true,
+            windowResizeDelay: 150,
+            events: [
+                {% for event in activities %}
+                {
+                    title: "{{ event.name }}",
+                    start: "{{ event.start_date|date:'c' }}",
+                    end: "{{ event.next_day_end|date:'c' }}",
+                    url: "{% url 'project:activity-detail' event.id %}",
+                    color: "{{ event.color }}"
+                },
+                {% endfor %}
+            ]
+        })
+        calendar.render()
+
+        window.switchView = function(viewType) {
+                calendar.changeView(viewType);
+        };
+
+      })
+
+    </script>
+{% endblock %}
+
+{% block main %}
+{{ block.super }}
+    <div id='calendar'></div>
+{% endblock %}

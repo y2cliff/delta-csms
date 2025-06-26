@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block main %}
+{{ block.super }}
+
+<section class="section">
+  <div class="row">
+  <div class="col-lg-12">
+
+  <!-- Default Card -->
+    <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ object }} : 
+      {% if can_change %}
+      <a href="{% url 'project:site-update' object.id %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Edit Site Info"> <i class="bi bi-pencil-square"></i></a>
+      {% endif %}
+      </h5>
+      <!-- Bordered Tabs -->
+      <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+        {% include 'snippets/bordered-tab-li.html' with active='active' tabId='info' %}
+        {% include 'snippets/bordered-tab-li.html' with tabId='budget' %}
+        {% include 'snippets/bordered-tab-li.html' with tabId='activity' %}
+        {% include 'snippets/bordered-tab-li.html' with tabId='documents' %}
+        {% include 'snippets/bordered-tab-li.html' with tabId='comments' %}
+      </ul>
+      <div class="tab-content pt-2" id="borderedTabContent">
+<!-- Tabs -->
+
+<!-- Info Tab -->
+  <div class="tab-pane fade show active" id="card-info" role="tabpanel" aria-labelledby="info-tab">
+    <div class="row mb-3">
+      <label class="col-sm-2 col-form-label">Name:</label>
+      <div class="col-sm-6">
+      <input type="text" class="form-control" value="{{ object.name }}" disabled="">
+      </div>
+      <label class="col-sm-2 col-form-label">Is Active</label>
+      <div class="col-sm-2">
+      <input type="text" class="form-control" value="{{ object.is_active }}" disabled="">
+      </div>
+    </div>
+    {% include 'snippets/audit-log.html' %}
+    {% include 'snippets/navigate.html' with app='project' model='Site' object=object %}
+  </div>
+<!-- End Info Tab -->
+
+<!-- Budget Tab -->          
+  <div class="tab-pane fade" id="card-budget" role="tabpanel" aria-labelledby="budget-tab">
+  <div class="table-responsive">
+  <table class="table datatable table-striped  w-100 d-block d-md-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Date Updated</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for budget in object.budget_items.all %}
+      <tr>
+        <td><a href="{% url 'project:budgetitem-detail' budget.id %}">{{ budget.code }}</a></td>
+        <td>{{ budget.name }}</td>
+        <td>{{ budget.get_type_display }}</td>
+        <td>{{ budget.date_updated }}</td>
+        <td style="text-align: right; padding-right: 30px">{{ budget.amount|floatformat:2|intcomma }}</td>
+      </tr>
+      {% endfor %}
+      {% comment %}
+      <tfoot style="font-weight: bold">
+        <tr>
+          <td style="text-align: left; padding-right: 30px"colspan="2">Total no. of items : {{ budget.count }}</td>
+          <td style="text-align: right; padding-right: 30px">Grand Total : </td>
+          <td style="text-align: right; padding-right: 30px">{{ object.my_budget|floatformat:2|intcomma }}</td>
+        </tr>
+      </tfoot>
+      {% endcomment %}
+    </tbody>  
+  </table>
+  </div>
+  <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group" role="group" aria-label="Right group">
+    <button type="button" class="btn btn-primary" onclick="location.href='{{ request.path }}budgetitem/create'">
+    <i class="bi bi-plus-square"></i> Add New Budget Item</button>
+  </div>
+  </div>
+  </div>
+<!-- End Budget Tab -->
+
+<!-- Activity Tab -->          
+  <div class="tab-pane fade" id="card-activity" role="tabpanel" aria-labelledby="activity-tab">
+  <div class="table-responsive">
+  <table class="table datatable table-striped  w-100 d-block d-md-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Leader</th>
+        <th>Date Updated</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for activity in object.activities.all %}
+      <tr>
+        <td><a href="{% url 'project:activity-detail' activity.id %}">{{ activity.code }}</a></td>
+        <td>{{ activity.name }}</td>
+        <td>{{ activity.leader }}</td>
+        <td>{{ activity.date_updated }}</td>
+        <td style="text-align: right; padding-right: 30px">{{ activity.amount|floatformat:2|intcomma }}</td>
+      </tr>
+      {% endfor %}
+      <tfoot style="font-weight: bold">
+            <tr>
+              <td style="text-align: left; padding-right: 30px"colspan="2">Total no. of items : {{ activity.count }}</td>
+              <td style="text-align: right; padding-right: 30px">Grand Total : </td>
+              <td style="text-align: right; padding-right: 30px">{{ object.my_activity|floatformat:2|intcomma }}</td>
+            </tr>
+          </tfoot>
+    </tbody>  
+  </table>
+  </div>
+  <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group" role="group" aria-label="Right group">
+    <button type="button" class="btn btn-primary" onclick="location.href='{{ request.path }}activity/create'">
+    <i class="bi bi-plus-square"></i> Add New Activity</button>
+  </div>
+  </div>
+  </div><!-- End Activity Tab -->
+
+<!-- Document Tab -->
+  {% include 'document/snippets/document.html' with object=object %} <!-- End Document Tab -->
+<!-- Comment Tab -->
+  {% include 'comment/snippets/comment.html' with object=object %} <!-- End Comment Tab -->
+
+
+<!-- End Tabs -->
+
+    </div>
+    </div><!-- End Default Card -->
+  </div>
+  </div>
+</section>
+{% endblock %}

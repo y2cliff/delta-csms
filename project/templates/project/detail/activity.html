@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block main %}
+{{ block.super }}
+
+
+<section class="section">
+  <div class="row">
+  <div class="col-lg-12">
+
+<!-- Default Card -->
+    <div class="card">
+    <div class="card-body">
+    
+    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group" role="group" aria-label="Left group">
+      <h5 class="card-title"> {{ object }} : 
+      {% if can_change %}
+      <a href="{% url 'project:activity-update' object.id %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Edit Project Info"> <i class="bi bi-pencil-square"></i></a>
+      {% endif %}
+      </h5>
+    </div>  
+    </div>
+      <!-- Bordered Tabs -->
+      <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+        {% include 'snippets/bordered-tab-li.html' with active='active' tabId='tasks' %}
+        {% include 'snippets/bordered-tab-li.html' with tabId='info' %}
+        {% include 'snippets/bordered-tab-li.html' with tabId='documents' %}
+        {% include 'snippets/bordered-tab-li.html' with tabId='comments' %}
+      </ul>
+      <div class="tab-content pt-2" id="borderedTabContent">
+<!-- Tabs -->
+        
+<!-- Tasks Tab -->          
+  <div class="tab-pane fade show active" id="card-tasks" role="tabpanel" aria-labelledby="tasks-tab">
+  <div class="table-responsive">
+  <table class="table datatable table-striped  w-100 d-block d-md-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Budget Item</th>
+        <th>Leader</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for task in object.tasks.all %}
+      <tr>
+        <td><a href="{% url 'project:task-detail' task.id %}">{{ task.code }}</a></td>
+        <td>{{ task.name }}</td>
+        <td>{{ task.budget_item.code }}</td>
+        <td>{{ task.leader }}</td>
+        <td>
+          <button id="follow-button-{{ task.id }}" class="btn btn-outline-info btn-sm" data-object-id="{{ task.id }}" data-app-name="project" data-model-name="task">
+            {% if request.user in task.followers.all %}
+                <i class="bi bi-person-dash-fill"></i> Unfollow
+            {% else %}
+                <i class="bi bi-person-plus-fill"></i> Follow
+            {% endif %}
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+      {% comment %}
+      <tfoot style="font-weight: bold">
+        <tr>
+          <td style="text-align: left; padding-right: 30px"colspan="2">Total no. of items : {{ task.count }}</td>
+          <td style="text-align: right; padding-right: 30px">Grand Total : </td>
+          <td style="text-align: right; padding-right: 30px">{{ object.my_activity|floatformat:2|intcomma }}</td>
+        </tr>
+      </tfoot>
+      {% endcomment %}
+    </tbody>  
+  </table>
+  </div>
+  <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group" role="group" aria-label="Left group">
+      {% include 'snippets/toggle-button.html' with app='project' model='Activity' object=object %}
+    </div>
+    <div class="btn-group" role="group" aria-label="Right group">
+      <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='{{ request.path }}task/create'">
+      <i class="bi bi-plus-square"></i> New Task</button>
+    </div>
+  </div>
+  </div>
+<!-- End Tasks Tab -->
+
+<!-- Info Tab -->
+      <div class="tab-pane fade" id="card-info" role="tabpanel" aria-labelledby="info-tab">
+
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Code:</label>
+        <div class="col-sm-2">
+        <input type="text" class="form-control" value="{{ object.code }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Name:</label>
+        <div class="col-sm-6">
+        <input type="text" class="form-control" value="{{ object.name }}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Start Date:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.start_date}}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">End Date:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.end_date}}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Site:</label>
+        <div class="col-sm-5">
+        <input type="text" class="form-control" value="{{ object.site }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Leader</label>
+        <div class="col-sm-3">
+        <input type="text" class="form-control" value="{{ object.leader.get_full_name }}" disabled="">
+        </div>
+      </div>
+
+    {% include 'snippets/audit-log.html' %}
+    {% include 'snippets/navigate.html' with app='project' model='Activity' object=object %}
+
+    </div><!-- End Info Tab -->
+
+<!-- Document Tab -->
+  {% include 'document/snippets/document.html' with object=object %}<!-- End Document Tab -->
+        
+<!-- Comment Tab -->
+  {% include 'comment/snippets/comment.html' with object=object %} <!-- End Comment Tab -->
+        
+<!-- End Tabs -->
+<!-- End Bordered Tabs -->
+    </div>
+    </div><!-- End Default Card -->
+  </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+  {% include 'js/toggle-follow.js'%}
+{% endblock%}
