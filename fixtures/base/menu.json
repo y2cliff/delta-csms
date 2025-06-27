@@ -1,0 +1,77 @@
+[
+  {
+  "model": "base.menu",
+  "pk": 1,
+  "fields": {
+  	"name": "Project", 
+    "module" : "base",
+    "menu_type": "Menu", 
+    "url_name": "project:home", 
+    "icon_class": "bi bi-bookmark-check"
+  }
+  },
+  {
+  "model": "base.menu",
+  "pk": 2,
+  "fields": {
+    "name": "Settings", 
+    "menu_type": "Label", 
+    "icon_class": ""
+    } 
+  },
+  {
+  "model": "base.menu",
+  "pk": 3,
+  "fields": {
+  	"name": "Dashboard", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:home", 
+    "icon_class": "bi bi-window-sidebar"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "pk": 4,
+  "fields": {
+    "name": "Site", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:site-list", 
+    "icon_class": "bi bi-journal-text"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "pk": 5,
+  "fields": {
+    "name": "Budget Item", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:budgetitem-list", 
+    "icon_class": "bi bi-bookmark-check"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "pk": 6,
+  "fields": {
+    "name": "Activity", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:activity-list", 
+    "icon_class": "bi bi-bookmark-check"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "pk": 7,
+  "fields": {
+      "name": "Task", 
+      "module" : "project",
+      "menu_type": "Menu", 
+      "url_name": "project:task-list", 
+      "icon_class": "bi bi-ui-checks"
+    }
+  }
+]

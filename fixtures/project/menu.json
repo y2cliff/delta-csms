@@ -1,0 +1,62 @@
+[
+  {
+  "model": "base.menu",
+  "fields": {
+  	"name": "Project", 
+    "module" : "base",
+    "menu_type": "Module", 
+    "url_name": "project:home", 
+    "icon_class": "bookmark-check"
+  }
+  },
+  {
+  "model": "base.menu",
+  "fields": {
+  	"name": "Dashboard", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:home", 
+    "icon_class": "window-sidebar"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "fields": {
+    "name": "Site", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:site-list", 
+    "icon_class": "pin-map-fill"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "fields": {
+    "name": "Budget Item", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:budgetitem-list", 
+    "icon_class": "cash-coin"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "fields": {
+    "name": "Activity", 
+    "module" : "project",
+    "menu_type": "Menu", 
+    "url_name": "project:activity-list", 
+    "icon_class": "bookmark-check"
+    }
+  }, 
+  {
+  "model": "base.menu",
+  "fields": {
+      "name": "Task", 
+      "module" : "project",
+      "menu_type": "Menu", 
+      "url_name": "project:task-list", 
+      "icon_class": "ui-checks"
+    }
+  }
+]

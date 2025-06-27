@@ -1,0 +1,146 @@
+[
+  {
+  "model": "project.site",
+  "pk": 1,
+  "fields": {
+    "code" : "QYBA",
+  	"name": "Batong Angono Limestone Quarry"
+  }
+  },
+  {
+  "model": "project.site",
+  "pk": 2,
+  "fields": {
+    "code" : "QYBC",
+  	"name": "RCC Bulacan Limestone Quarry"
+    }
+  }, 
+  {
+  "model": "project.site",
+  "pk": 3,
+  "fields": {
+    "code" : "QYBT",
+    "name": "RCC Batangas Limestone Quarry"
+    }
+  }, 
+  {
+  "model": "project.site",
+  "pk": 4,
+  "fields": {
+    "code" : "QYEC",
+    "name": "Eagle Cement Limestone Quarry"
+    }
+  }, 
+  {
+  "model": "project.site",
+  "pk": 5,
+  "fields": {
+    "code" : "QYIL",
+      "name": "RCC Iligan Limestone Quarry"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 6,
+  "fields": {
+    "code" : "QYLG",
+    "name": "Lugait Quarry"
+    }
+  },    
+  {
+  "model": "project.site",
+  "pk": 7,
+  "fields": {
+    "code" : "QYNC",
+    "name": "NCC Limestone Quarry"
+    }
+  }, 
+  {
+  "model": "project.site",
+  "pk": 8,
+  "fields": {
+    "code" : "QYPX",
+    "name": "Philex"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 9,
+  "fields": {
+    "code" : "QYSC",
+    "name": "Solid Cement Limestone Quarry"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 10,
+  "fields": {
+    "code" : "QYTS",
+    "name": "RCC Teresa Limestone Quarry"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 11,
+  "fields": {
+    "code" : "MNDD",
+    "name": "OGPI Didipio Gold Mining"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 12,
+  "fields": {
+    "code" : "CODA",
+    "name": "Daguma Coal Mining"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 13,
+  "fields": {
+    "code" : "COMD",
+      "name": "MRT 7 Depot Construction"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 14,
+  "fields": {
+    "code" : "CHQ",
+      "name": "Central Head Office"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 15,
+  "fields": {
+    "code" : "CHBL",
+      "name": "Bulacan Lot"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 16,
+  "fields": {
+    "code" : "WHTY",
+      "name": "Taytal Cental Warehouse"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 17,
+  "fields": {
+    "code" : "EMOL",
+      "name": "Orani Lot"
+    }
+  },
+  {
+  "model": "project.site",
+  "pk": 18,
+  "fields": {
+    "code" : "EMPL",
+      "name": "Pampanga Lot"
+    }
+  }
+]
