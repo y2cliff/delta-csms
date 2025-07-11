@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from django.contrib.humanize.templatetags.humanize import intcomma
-from .models import Site, BudgetItem, Activity, Task, Category, Work, UserWorkDate, DailyWork
+from .models import Site, BudgetItem, Activity, Task, ProjCategory, Work, UserWorkDate, DailyWork
 from base.tables import ATTRS
 from django import forms
 
@@ -53,11 +53,11 @@ class ActivityTable(tables.Table):
         fields = sequence = ('name', 'site', 'start_date', 'end_date','leader', 'action')
 
 
-class CategoryTable(tables.Table):
+class ProjCategoryTable(tables.Table):
     code = tables.Column(linkify=True)
 
     class Meta:
-        model = Category
+        model = ProjCategory
         attrs = ATTRS
         fields = sequence = ('code', 'name')
 

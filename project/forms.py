@@ -5,24 +5,27 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.shortcuts import reverse
 
-from django_select2.forms import Select2Widget
+from django_select2.forms import Select2Widget, ModelSelect2Widget
 
 from crispy_forms.layout import Field, Row, Column, HTML
 from crispy_bootstrap5.bootstrap5 import FloatingField
 
 from base.forms import Helper, SELECTFILTER_CSS, ClearableSelect2Widget
-from .models import Site, BudgetItem, Activity, Task, Category, Work, UserWorkDate, DailyWork
+from . import models
 from django_currentuser.middleware import get_current_user
 import datetime
 
-
 from django.utils.safestring import mark_safe
+
+
+class UserSelect2Widget(ClearableSelect2Widget):
+    queryset = User.objects.all()
 
 
 class SiteForm(forms.ModelForm):
 
     class Meta:
-        model = Site
+        model = models.Site
         fields = ['code','name']
 
     class Media:
@@ -42,7 +45,7 @@ class SiteForm(forms.ModelForm):
 
     def clean_code(self):
         code = self.cleaned_data['code']
-        if not self.instance and Site.objects.filter(code=code).exists():
+        if not self.instance and models.Site.objects.filter(code=code).exists():
             raise forms.ValidationError(f"Code already exists.")
         return code
 
@@ -53,7 +56,7 @@ class SiteForm(forms.ModelForm):
 class BudgetItemForm(forms.ModelForm):
 
     class Meta:
-        model = BudgetItem
+        model = models.BudgetItem
         fields = ['code','name', 'site', 'type','amount']
         widgets = {
             'site': ClearableSelect2Widget(attrs={"data-placeholder": "select an option"}),
@@ -80,13 +83,13 @@ class BudgetItemForm(forms.ModelForm):
         parent_ = kwargs.pop('parent_id', '')
         super(BudgetItemForm, self).__init__(*args, **kwargs)
         if parent_:
-            self.initial['site'] = Site.objects.get(id=parent_)
+            self.initial['site'] = models.Site.objects.get(id=parent_)
             self.fields['site'].queryset = Site.objects.filter(id=parent_)
             self.fields['site'].required = True
 
     def clean_code(self):
         code = self.cleaned_data['code']
-        if not self.instance and BudgetItem.objects.filter(code=code).exists():
+        if not self.instance and models.BudgetItem.objects.filter(code=code).exists():
             raise ValidationError(f"Code already exists.")
         return code
 
@@ -94,10 +97,10 @@ class BudgetItemForm(forms.ModelForm):
         return reverse('project:budgetitem-list')
 
 
-class CategoryForm(forms.ModelForm):
+class ProjCategoryForm(forms.ModelForm):
 
     class Meta:
-        model = Category
+        model = models.ProjCategory
         fields = ['code','name']
 
     class Media:
@@ -112,11 +115,11 @@ class CategoryForm(forms.ModelForm):
                 Column(FloatingField('name'),css_class="col-lg-10")
             )
         )
-        super(CategoryForm, self).__init__(*args, **kwargs)
+        super(ProjCategoryForm, self).__init__(*args, **kwargs)
 
     def clean_code(self):
         code = self.cleaned_data['code']
-        if not self.instance and Category.objects.filter(code=code).exists():
+        if not self.instance and models.Category.objects.filter(code=code).exists():
             raise ValidationError(f"Code already exists.")
         return code
 
@@ -158,7 +161,7 @@ class ActivityForm(forms.ModelForm):
         js = ['/admin/jsi18n',]
 
     class Meta:
-        model = Activity
+        model = models.Activity
         fields = ['code','name', 'site', 'start_date', 'end_date', 'leader','followers', 'color']
         widgets = {
             'site': ClearableSelect2Widget(attrs={"data-placeholder": "select an option"}),
@@ -188,14 +191,14 @@ class ActivityForm(forms.ModelForm):
         parent_ = kwargs.pop('parent_id', '')
         super(ActivityForm, self).__init__(*args, **kwargs)
         if parent_:
-            self.initial['site'] = Site.objects.get(id=parent_)
-            self.fields['site'].queryset = Site.objects.filter(id=parent_)
+            self.initial['site'] = models.Site.objects.get(id=parent_)
+            self.fields['site'].queryset = models.Site.objects.filter(id=parent_)
             self.fields['site'].required = True
         self.fields["followers"].label_from_instance = lambda obj: obj.get_full_name() or obj.username
 
     def clean_code(self):
         code = self.cleaned_data['code']
-        if not self.instance and Activity.objects.filter(code=code).exists():
+        if not self.instance and models.Activity.objects.filter(code=code).exists():
             raise ValidationError(f"Code already exists.")
         return code
 
@@ -216,7 +219,7 @@ class TaskForm(forms.ModelForm):
         )
 
     class Meta:
-        model = Task
+        model = models.Task
         fields = ['activity','sequence', 'code', 'name','leader','budget_item','followers']
         widgets = {
             'activity': ClearableSelect2Widget(attrs={"data-placeholder": "select an option"}),
@@ -250,14 +253,14 @@ class TaskForm(forms.ModelForm):
         parent_ = kwargs.pop('parent_id', '')
         super(TaskForm, self).__init__(*args, **kwargs)
         if parent_:
-            self.initial['activity'] = Activity.objects.get(id=parent_)
-            self.fields['activity'].queryset = Activity.objects.filter(id=parent_)
+            self.initial['activity'] = models.Activity.objects.get(id=parent_)
+            self.fields['activity'].queryset = models.Activity.objects.filter(id=parent_)
             self.fields['activity'].required = True
         self.fields["followers"].label_from_instance = lambda obj: obj.get_full_name() or obj.username
 
     def clean_code(self):
         code = self.cleaned_data['code']
-        if not self.instance and Task.objects.filter(code=code).exists():
+        if not self.instance and models.Task.objects.filter(code=code).exists():
             raise forms.ValidationError(f"Code already exists.")
         return code
 
@@ -268,7 +271,7 @@ class TaskForm(forms.ModelForm):
 class WorkForm(forms.ModelForm):
 
     class Meta:
-        model = Work
+        model = models.Work
         fields = ['code','description', 'parent_work', 'min_hrs', 'max_hrs', 'benchmark_hrs', 'market_cost', 'skill_level', 'is_metered']
         widgets = {
             'parent_work': ClearableSelect2Widget(attrs={"data-placeholder": "select an option"})
@@ -301,7 +304,7 @@ class WorkForm(forms.ModelForm):
 
     def clean_code(self):
         code = self.cleaned_data['code']
-        if not self.instance and Work.objects.filter(code=code).exists():
+        if not self.instance and models.Work.objects.filter(code=code).exists():
             raise ValidationError(f"Code already exists.")
         return code
 
@@ -342,7 +345,7 @@ class UserWorkDateForm(forms.ModelForm):
     )
 
     class Meta:
-        model = UserWorkDate
+        model = models.UserWorkDate
         fields = ['user','workdate','regular_time','ot_time','offduty_time', 'travel_time']
 
     class Media:
@@ -380,7 +383,7 @@ class DailyWorkForm(forms.ModelForm):
     )
    
     class Meta:
-        model = DailyWork
+        model = models.DailyWork
         fields = ['workdate','work','details','work_time','situation','work_class','work_group','quantity_pct']
         widgets = {
             'work': ClearableSelect2Widget(attrs={"data-placeholder": "select an option"})
@@ -412,7 +415,7 @@ class DailyWorkForm(forms.ModelForm):
         parent_ = kwargs.pop('parent_id', '')        
         super(DailyWorkForm, self).__init__(*args, **kwargs)
         if parent_:
-            self.initial['workdate'] = UserWorkDate.objects.get(id=parent_)
+            self.initial['workdate'] = models.UserWorkDate.objects.get(id=parent_)
             self.fields['workdate'].queryset = UserWorkDate.objects.filter(id=parent_)
             self.fields['workdate'].required = True
 

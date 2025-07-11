@@ -3,10 +3,8 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-
-
-{% block main %}
-  {% block sidebar %} {% include 'project/snippets/sidebar.html'%} {% endblock %}
+{% block sidebar %} {% include 'project/snippets/sidebar.html'%} {% endblock %}
+{% block content %}
   {% render_table table %}
   <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group" role="group" aria-label="Left group">

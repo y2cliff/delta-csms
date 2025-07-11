@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Site, BudgetItem, Activity, Task, Category, Work, UserWorkDate, DailyWork, Dashboard
+from . import models
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import DecimalWidget
@@ -20,7 +20,7 @@ class ActivityAdmin(admin.ModelAdmin):
     readonly_fields = ('date_created', 'date_updated')
 
     
-class CategoryAdmin(admin.ModelAdmin):
+class ProjCategoryAdmin(admin.ModelAdmin):
     list_display=['code','name']
     readonly_fields = ('date_created', 'date_updated')
 
@@ -48,7 +48,7 @@ class SiteResource(resources.ModelResource):
 
 
     class Meta:
-        model = Site
+        model = models.Site
         fields = export_order = ('code', 'name')
 
     def dehydrate_code(self, obj):
@@ -67,7 +67,7 @@ class BudgetItemResource(resources.ModelResource):
 
 
     class Meta:
-        model = BudgetItem
+        model = models.BudgetItem
         fields = export_order = ('code', 'name', 'site', 'type', 'amount')
 
     def dehydrate_code(self, obj):
@@ -86,12 +86,12 @@ class BudgetItemResource(resources.ModelResource):
         return obj.amount
 
 
-class CategoryResource(resources.ModelResource):
+class ProjCategoryResource(resources.ModelResource):
     code = Field(column_name='Code')
     name = Field(column_name='Name')
 
     class Meta:
-        model = Category
+        model = models.ProjCategory
         fields = export_order = ('code', 'name')
 
     def dehydrate_code(self, obj):
@@ -106,7 +106,7 @@ class WorkResource(resources.ModelResource):
     description = Field(column_name='Description')
 
     class Meta:
-        model = Work
+        model = models.Work
         fields = export_order = ('code', 'description')
 
     def dehydrate_code(self, obj):
@@ -125,7 +125,7 @@ class ActivityResource(resources.ModelResource):
 
 
     class Meta:
-        model = Activity
+        model = models.Activity
         fields = export_order = ('code', 'name', 'site', 'start_date', 'leader')
 
     def dehydrate_code(self, obj):
@@ -154,7 +154,7 @@ class TaskResource(resources.ModelResource):
 
 
     class Meta:
-        model = Task
+        model = models.Task
         fields = export_order = ('sequence', 'code', 'name', 'activity', 'budget_item', 'leader')
 
     def dehydrate_sequence(self, obj):
@@ -176,12 +176,13 @@ class TaskResource(resources.ModelResource):
         return obj.leader
 
 
-admin.site.register(Site,SiteAdmin)
-admin.site.register(BudgetItem,BudgetItemAdmin)
-admin.site.register(Activity,ActivityAdmin)
-admin.site.register(Task,TaskAdmin)
-admin.site.register(Category,CategoryAdmin)
-admin.site.register(Dashboard,DashboardAdmin)
-admin.site.register(UserWorkDate,UserWorkDateAdmin)
-admin.site.register(DailyWork,DailyWorkAdmin)
+admin.site.register(models.Site,SiteAdmin)
+admin.site.register(models.BudgetItem,BudgetItemAdmin)
+admin.site.register(models.Activity,ActivityAdmin)
+admin.site.register(models.Task,TaskAdmin)
+admin.site.register(models.ProjCategory,ProjCategoryAdmin)
+admin.site.register(models.ProjDashboard,DashboardAdmin)
+
+admin.site.register(models.UserWorkDate,UserWorkDateAdmin)
+admin.site.register(models.DailyWork,DailyWorkAdmin)
  

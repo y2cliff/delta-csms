@@ -1,4 +1,5 @@
 from base.abstract import TemplateModel
+from base.models import Department
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum, F
@@ -7,8 +8,7 @@ from django.utils.translation import gettext_lazy as _
 import datetime
 
 
-
-class Dashboard(TemplateModel):
+class ProjDashboard(TemplateModel):
     user = models.OneToOneField(
         User, 
         on_delete=models.CASCADE,
@@ -108,7 +108,7 @@ class Site(TemplateModel):
         return reverse('project:site-detail',kwargs={'pk': self.id})
 
 
-class Category(TemplateModel):
+class ProjCategory(TemplateModel):
     code = models.CharField(
         max_length=10, 
         unique=True, 
@@ -126,27 +126,28 @@ class Category(TemplateModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('project:category-detail',kwargs={'pk': self.id})
+        return reverse('project:projcategory-detail',kwargs={'pk': self.id})
 
 
 class BudgetItem(TemplateModel):
-    BUDGET_TYPE = (
-        ('ADM','Administrative'),
-        ('COM','Communications'),
-        ('NET','Network'),
-        ('SYS','System'),
-        ('SEC','Security'),
-        ('TECH','Technical')
-    )
+    # BUDGET_TYPE = (
+    #     ('ADM','Administrative'),
+    #     ('COM','Communications'),
+    #     ('NET','Network'),
+    #     ('SYS','System'),
+    #     ('SEC','Security'),
+    #     ('TECH','Technical')
+    # )
+    department = models.ForeignKey(Department, on_delete=models.PROTECT, blank=True, null=True, related_name='budget_items')
     code = models.CharField(
         max_length=10, 
         unique=True, 
         error_messages={'unique': "Code already exists."}
     )
     name = models.CharField(max_length=60, blank=True, null=True)
-    site = models.ForeignKey('Site', on_delete=models.PROTECT, blank=True, null=True, related_name='budget_items')
-    type = models.CharField(max_length=10, default="Admin", choices=BUDGET_TYPE)
-    amount = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    # site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True, related_name='budget_items')
+    # type = models.CharField(max_length=10, default="Admin", choices=BUDGET_TYPE)
+    # amount = models.DecimalField(max_digits=18, decimal_places=2, default=0)
 
     class Meta:
         ordering = ["code"]
@@ -181,6 +182,7 @@ class Activity(TemplateModel):
         ('#fd79a8', 'Pink'),
         ('#6f42c1', 'Purple')
     ]
+    department = models.ForeignKey(Department, on_delete=models.PROTECT, blank=True, null=True, related_name='activities')
     code = models.CharField(
         max_length=10, 
         unique=True, 
@@ -290,7 +292,6 @@ class Work(TemplateModel):
     # def save(self):
     #     self.target_hrs = (self.min_hrs + self.max_hrs) / 2
     #     return super().save(self)
-
 
 class UserWorkDate(TemplateModel):
     user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True, related_name='workdate')

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<section class="section">
+<div class="row">
+<div class="col-lg-12">
+
+  <!-- Default Card -->
+  <div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{ object }} : 
+    {% if can_change %}
+      <a href="{% url 'cit:radio-update' object.id %}" data-bs-toggle="tooltip" data-bs-placement="right" title="Edit Radio Info"> <i class="bi bi-pencil-square"></i></a>
+    {% endif %}
+    </h5>
+  <!-- Bordered Tabs -->
+    <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+      {% include 'snippets/bordered-tab-li.html' with active='active' tabId='info' %}
+      {% include 'snippets/bordered-tab-li.html' with tabId='documents' %}
+      {% include 'snippets/bordered-tab-li.html' with tabId='comments' %}
+    </ul>
+  <!-- Tabs -->
+    <div class="tab-content pt-2" id="borderedTabContent">
+
+  <!-- Info Tab -->
+    <div class="tab-pane fade show active" id="card-info" role="tabpanel" aria-labelledby="info-tab">
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Serial No.:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.serial_number }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Type:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.get_type_display }}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Manufacturer:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.manufacturer }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Model:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.model }}" disabled="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Frequency Band:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.frequency_band }}" disabled="">
+        </div>
+        <label class="col-sm-2 col-form-label">Frequency:</label>
+        <div class="col-sm-4">
+        <input type="text" class="form-control" value="{{ object.frequency }}" disabled="">
+        </div>
+      </div>
+    {% include 'snippets/audit-log.html' %}
+    {% include 'snippets/navigate.html' with app='cit' model='Radio' object=object %}
+  </div><!-- End Info Tab -->
+
+
+<!-- Document Tab --> 
+  {% include 'document/snippets/document.html' with object=object %} <!-- End Document Tab -->
+<!-- Comment Tab --> 
+  {% include 'comment/snippets/comment.html' with object=object %} <!-- End Comment Tab -->
+  </div><!-- End Tabs -->
+  </div>
+  </div><!-- End Default Card -->
+</div>
+</div>
+</section>
+{% endblock %}

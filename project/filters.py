@@ -1,6 +1,9 @@
 import django_filters
-from .models import Site, BudgetItem, Activity, Task, Category, Work, UserWorkDate, DailyWork
-
+from .models import Site, BudgetItem, Activity, Task, ProjCategory, Work, UserWorkDate, DailyWork
+from .forms import UserSelect2Widget
+from django_select2.forms import Select2Widget
+from django.contrib.auth.models import User
+from base.forms import Helper, SELECTFILTER_CSS, ClearableSelect2Widget
 
 class SiteFilter(django_filters.FilterSet):
     class Meta:
@@ -14,13 +17,18 @@ class BudgetItemFilter(django_filters.FilterSet):
         model = BudgetItem
 
 
-class CategoryFilter(django_filters.FilterSet):
+class ProjCategoryFilter(django_filters.FilterSet):
     class Meta:
         fields = ['code','name']
-        model = Category
+        model = ProjCategory
 
 
 class ActivityFilter(django_filters.FilterSet):
+    leader = django_filters.ModelChoiceFilter(
+        queryset=User.objects.all(),
+        widget=Select2Widget,
+        label='Leader'
+    )
     class Meta:
         fields = ['code','name', 'site', 'start_date', 'leader']
         model = Activity
@@ -39,6 +47,16 @@ class WorkFilter(django_filters.FilterSet):
 
 
 class UserWorkDateFilter(django_filters.FilterSet):
+    user =django_filters.ModelChoiceFilter(
+        queryset=User.objects.all(),
+        widget=ClearableSelect2Widget(attrs={"data-placeholder": "select an option"}),
+        label='Filter by User'
+        )
+
+    class Media:
+        css = SELECTFILTER_CSS
+        js = ['/admin/jsi18n',]
+
     class Meta:
         fields = ['user']
         model = UserWorkDate

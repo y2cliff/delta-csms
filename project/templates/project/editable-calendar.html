@@ -80,8 +80,7 @@
     </script>
 {% endblock %}
 
-{% block main %}
-{{ block.super }}
+{% block content %}
     <div id='calendar'></div>
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 {% endblock %}
