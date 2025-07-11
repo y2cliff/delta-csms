@@ -6,7 +6,8 @@
 {% block extra_header %}
 <li class="nav-item dropdown">
 	<a class="nav-link nav-icon" href="#">
-		<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filter-modal"><i class="bi bi-funnel"></i> Filter</button>
+		<button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#filter-modal"><i class="bi bi-funnel"></i> Filter
+		</button>
 </a>
 </li>
 {% endblock %}
@@ -38,11 +39,11 @@
 {% endblock%}
 {% endcomment %}
 
+{{ filter.form.media }}
+
 {% block content %}
 
-<div class="table-responsive">
-{% render_table table %}
-</div>
+<div class="table-responsive">{% render_table table %}</div>
 
 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group" role="group" aria-label="Left group">
@@ -59,6 +60,7 @@
 {% endif %}
 </div>
 
+<!-- START DOWNLOAD MODAL -->
 <div class="modal fade" id="download-modal" tabindex="-1">
 <div class="modal-dialog">
 <div class="modal-content">
@@ -67,18 +69,38 @@
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	</div>
 	<div class="modal-body">
+		<div class="text-center">
+		<div class="d-grid gap-2 align-items-center">
+		<div class="p-2">
+		<a class='btn btn-outline-primary btn-sm' href="{% export_url "xlsx" %}" style="text-decoration:none" data-dismiss="modal"><i class="bi bi-download"></i> Save as Excel File</a>
+		</div>
+		<div class="p-2">
+		<a class='btn btn-outline-primary btn-sm' href="{% export_url "csv" %}" style="text-decoration:none" data-dismiss="modal"><i class="bi bi-download"></i> Save as CSV File</a>
+		</div>
+		<div class="p-2">
+		<a class='btn btn-outline-primary btn-sm' href="{% export_url "json" %}" style="text-decoration:none" data-dismiss="modal"><i class="bi bi-download"></i> Save as JSON File</a>
+		</div>
+		<div class="p-2">
+		<button type="button" class="btn btn-outline-danger btn-sm" data-bs-dismiss="modal">
+		<i class="bi bi-x-circle"></i> Cancel</button>
+		</div>
+		</div>
+		</div>
+		{% comment %}
 		<form action="" method="POST">
 			{% csrf_token %}
 			{{ form.as_p }}
 			<button type="submit" name="download" class="btn btn-outline-primary btn-sm">
 			<i class="bi bi-floppy me-1"></i> Save</button>
 		</form>
+		{% endcomment %}
 	</div>
 </div>
 </div>
-</div>
+</div><!-- END DOWNLOAD MODAL -->
 
-<div class="modal fade" id="filter-modal" tabindex="-1">
+<!-- START FILTER MODAL -->
+<div class="modal fade" id="filter-modal" >
 <div class="modal-dialog">
 <div class="modal-content">
 	<div class="modal-header">
@@ -94,10 +116,9 @@
 	</div>
 </div>
 </div>
-</div>
+</div><!-- END FILTER MODAL-->
 
 {% endblock %}
-
 
 {% block extra_js %}
   {% include 'js/toggle-follow.js'%}

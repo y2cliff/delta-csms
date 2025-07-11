@@ -6,6 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+  <meta name="google-site-verification" content="ikU5kvFr3qKxCe6sVTon2x2v7jJ2N1sy0qdC-GLMeZI" />
   
   <title>
   {% block pagetitle %}
@@ -13,8 +14,8 @@
   {% endblock %}
   </title>
   
-  <meta content="Pledge Recording System" name="description">
-  <meta content="HTML, Django, Python" name="keywords">
+  <meta content="Corporate System Management Suite" name="description">
+  <meta content="Delta, Earthmoving, CSMS, System" name="keywords">
   <meta content="MCLG" name="author">
 
   <!-- Favicons -->
@@ -31,7 +32,6 @@
   {% include 'js/darkmode.js' %}
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
-
 
   
   {% comment %}
@@ -82,26 +82,36 @@
 <body>
   
 {% block header %}
-  {% include 'snippets/header.html'%}
+  <header id="header" class="header fixed-top d-flex align-items-center">
+  {% include 'snippets/header_left.html'%}
+  {% block extra_header %}{% endblock extra_header %}
+  {% include 'snippets/header_right.html'%}
+  </header><!-- End Header -->
 {% endblock header %}
 
 {% block sidebar %}
+  <aside id="sidebar" class="sidebar">
   {% include 'snippets/sidebar.html'%}
+  {% block extra_sidebar%} {% endblock extra_sidebar %}
+  </aside>
 {% endblock sidebar %}
 
-{% block content %}
+{% block main %} 
 <main id="main" class="main">
   
   {% block messages %}
   {% include 'snippets/form-messages.html' %}
   {% endblock messages %}
 
-  {% block main %} 
+  {% block breadcrumbs %}
   {% include 'snippets/breadcrumbs.html'%} 
-  {% endblock main %}
+  {% endblock breadcrumbs %}
+
+  {% block content %}
+  {% endblock content %}
 
 </main>
-{% endblock content %}
+{% endblock main %}
 
 {% block footer %}
   {% include 'snippets/footer.html'%}

@@ -15,6 +15,7 @@ from django.views.generic import ListView, FormView
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
+from django.db.models import F, Q
 
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
@@ -25,10 +26,12 @@ from django_tables2.paginators import LazyPaginator
 from .filters import UserProfileFilter
 from .forms import UserForm, UserProfileForm, ProfileImageForm, FormatForm
 from .mixins import ContextTitleMixin
-from .models import UserProfile, Menu, UserMenuOrder
+from .models import UserProfile, Menu, get_user_menus
 from .tables import UserProfileTable
 from base.admin import UserProfileResource
 from base.forms import FormatForm
+
+from django_currentuser.middleware import get_current_user, get_current_authenticated_user
 
 
 # class BaseView(ContextTitleMixin, TemplateView):
@@ -111,9 +114,7 @@ class BaseMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['module'] = self.module
-        context['user_menus'] = UserMenuOrder.objects.my_module_menus(
-            module=self.module, 
-            user=self.request.user) or None
+        context['user_menus'] =  get_user_menus(get_current_authenticated_user())
         context['page_title'] = self.page_title
         context['parent_menu'] = self.parent_menu
         context['page_name'] = self.page_name
@@ -133,6 +134,7 @@ class TemplateListView(LoginRequiredMixin, SingleTableMixin, BaseMixin, ExportMi
     table_pagination = False
     paginator_class = LazyPaginator
     export_name = model.__name__
+    export_formats = ['csv', 'xlsx']
     filterset_class = UserProfileFilter
     model_resource = UserProfileResource
 
@@ -148,13 +150,17 @@ class TemplateListView(LoginRequiredMixin, SingleTableMixin, BaseMixin, ExportMi
         if 'download' in request.POST:
             qs = self.get_queryset() #filtering done here
             dataset = self.model_resource().export(qs)
+            # url = self.request.META.get('HTTP_REFERER')
 
             filename = self.model.__name__ + '_List'
 
             format = request.POST.get('format')
+            # cmd = url + '?export_=' + format
+            # print(cmd)
 
             if format == 'xlsx':
                 ds = dataset.xlsx
+
             elif format == 'csv':
                 ds = dataset.csv
             else:
@@ -163,6 +169,7 @@ class TemplateListView(LoginRequiredMixin, SingleTableMixin, BaseMixin, ExportMi
             response = HttpResponse(ds, content_type=f"{format}")
             response['Content-Disposition']= f"attachment; filename={filename}.{format}"
             return response
+            # return HttpResponseRedirect(cmd)
 
 
 class TemplateCreateView(LoginRequiredMixin, PermissionRequiredMixin, BaseMixin, CreateView):
@@ -473,21 +480,3 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, "change_password.html", {"form": form})
-
-
-# from django.contrib.auth import get_user_model
-# from your_app.models import Menu, UserMenu
-
-# # Get the user instance
-# User = get_user_model()
-# user = User.objects.get(username="example_user")  # Modify as needed
-
-# # Get all available menu items
-# menu_items = Menu.objects.all()  # Adjust queryset if needed
-
-# # Iterate through the menu list and populate UserMenu table
-# for menu in menu_items:
-#     if not UserMenu.objects.filter(user=user, menu=menu).exists():
-#         UserMenu.objects.create(user=user, menu=menu)
-
-# print("UserMenu table populated successfully.")

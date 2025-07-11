@@ -3,6 +3,7 @@
   "model": "base.menu",
   "pk": 1,
   "fields": {
+    "code": "BASE:001",
   	"name": "Project", 
     "module" : "base",
     "menu_type": "Menu", 
@@ -14,6 +15,7 @@
   "model": "base.menu",
   "pk": 2,
   "fields": {
+    "code": "BASE:002",
     "name": "Settings", 
     "menu_type": "Label", 
     "icon_class": ""
@@ -23,6 +25,7 @@
   "model": "base.menu",
   "pk": 3,
   "fields": {
+    "code": "PROJ:001",
   	"name": "Dashboard", 
     "module" : "project",
     "menu_type": "Menu", 
@@ -34,7 +37,8 @@
   "model": "base.menu",
   "pk": 4,
   "fields": {
-    "name": "Site", 
+    "code": "PROJ:002",
+    "name": "Site",
     "module" : "project",
     "menu_type": "Menu", 
     "url_name": "project:site-list", 
@@ -45,6 +49,7 @@
   "model": "base.menu",
   "pk": 5,
   "fields": {
+    "code": "PROJ:003",
     "name": "Budget Item", 
     "module" : "project",
     "menu_type": "Menu", 
@@ -56,6 +61,7 @@
   "model": "base.menu",
   "pk": 6,
   "fields": {
+    "code": "PROJ:004",
     "name": "Activity", 
     "module" : "project",
     "menu_type": "Menu", 
@@ -67,6 +73,7 @@
   "model": "base.menu",
   "pk": 7,
   "fields": {
+      "code": "PROJ:005",
       "name": "Task", 
       "module" : "project",
       "menu_type": "Menu", 

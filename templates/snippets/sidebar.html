@@ -1,7 +1,6 @@
 {% load custom_tags %}
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
   <ul class="sidebar-nav" id="sidebar-nav">
 
   <li class="nav-item">
@@ -12,47 +11,53 @@
   </li>
 
   <li class="nav-heading"> 
-  {% if module == 'base' %}Modules {{ export_name }}
+  {% if module == 'base' %}Modules
   {% else %} {{ module }}
   {% endif %}  
   </li>
     
   {% for user_menu in user_menus %}
-    {% if 'Module' in user_menu.menu.get_menu_type_display or 'Menu' in user_menu.menu.get_menu_type_display %} 
+    {% if 'Module' in user_menu.get_menu_type_display or 'Menu' in user_menu.get_menu_type_display %} 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url user_menu.menu.url_name %}">
-        <i class="bi bi-{{ user_menu.menu.icon_class }}"></i><span>{{ user_menu.menu.name }}</span></a>
+        <a class="nav-link collapsed" href="{% url user_menu.url_name %}">
+        <i class="bi bi-{{ user_menu.icon_class }}"></i><span>{{ user_menu.name }}</span></a>
       </li>
-    {% elif 'Label' in user_menu.menu.get_menu_type_display %}
-      <li class="nav-heading">{{ user_menu.menu.name }}</li>
+    {% elif 'Label' in user_menu.get_menu_type_display %}
+      <li class="nav-heading">{{ user_menu.name }}</li>
     {% endif %}
   {% endfor %}
 
   {% if user.is_superuser and module == 'base' %} 
-  <li class="nav-heading"> Admin </li>
+  <li class="nav-heading"> Administrator </li>
   <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
       <i class="bi bi-gear"></i><span>Settings</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
       <li>
-        <a href="{% url 'menu-list' %}">
-          <i class="bi bi-circle"></i><span>Menu</span>
+        <a href="{% url 'userprofile-list' %}">
+        <i class="bi bi-circle"></i><span>User Profile</span>
         </a>
       </li>
       <li>
-        <a href="{% url 'userprofile-list' %}">
-          <i class="bi bi-circle"></i><span>User</span>
+        <a href="{% url 'groupprofile-list' %}">
+        <i class="bi bi-circle"></i><span>Group Profile</span>
         </a>
       </li>
+      <li>
+        <a href="{% url 'menu-list' %}">
+        <i class="bi bi-circle"></i><span>Menu</span>
+        </a>
+      </li>
+      {% comment %}
+      <li>
+        <a href="{% url 'department-list' %}">
+        <i class="bi bi-circle"></i><span>Department</span>
+        </a>
+      </li>
+      {% endcomment %}
     </ul>
   </li>
 
   {% endif %}
-
-
-
-  
-
   </ul>
-</aside>

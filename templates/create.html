@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block base_css %}
   {{ block.super }}
@@ -9,13 +10,11 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 {% endblock %}
 
-{% load crispy_forms_tags %}
-  <script type="text/javascript" src="{% url 'jsi18n' %}" > </script>
+  <script type="text/javascript" src="{% url 'jsi18n' %}"/>
   {{ form.media }}
   
 
-{% block main %}
-{{ block.super }}
+{% block content %}
 <div class="card">
   <div class="card-body">
     <h5 class="card-title"></h5>

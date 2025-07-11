@@ -28,9 +28,11 @@ urlpatterns = [
     path("select2/", include("django_select2.urls")),
 
     path('', include('base.urls')),
-    path('project/', include('project.urls')),
     path('document/', include('document.urls')),
     path('comment/', include('comment.urls')),
+    # path('project/', include('project.urls')),
+    # path('cit/', include('cit.urls')),
+    # path('inventory/', include('inventory.urls')),
 ]
 
 @login_required

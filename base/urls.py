@@ -41,4 +41,8 @@ urlpatterns = [
 
 urlpatterns += scaffolding.MenuCrudManager().get_url_patterns()
 urlpatterns += scaffolding.UserProfileCrudManager().get_url_patterns()
-urlpatterns += scaffolding.UserMenuOrderCrudManager().get_url_patterns()
+urlpatterns += scaffolding.UserProfileChildCrudManager().get_url_patterns()
+urlpatterns += scaffolding.GroupProfileCrudManager().get_url_patterns()
+urlpatterns += scaffolding.GroupProfileChildCrudManager().get_url_patterns()
+# urlpatterns += scaffolding.UserMenuOrderCrudManager().get_url_patterns()
+urlpatterns += scaffolding.DepartmentCrudManager().get_url_patterns()

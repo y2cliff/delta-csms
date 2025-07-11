@@ -30,7 +30,7 @@ except KeyError as e:
     raise RuntimeError("Could not find a SECRET_KEY in environment") from e
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['csms.deltaearthmoving.com', 'localhost', '127.0.0.1', '192.168.88.88', '61.245.4.14']
 
@@ -44,14 +44,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-     # UNCOMMENT THESE APPS AFTER FIRST RUN
     'django.contrib.humanize',
 
+     # UNCOMMENT THESE APPS AFTER FIRST RUN
     'base.apps.BaseConfig',
-    'document.apps.DocumentConfig',
-    'project.apps.ProjectConfig',
     'comment.apps.CommentConfig',
+    'document.apps.DocumentConfig',
+
+    # 'project.apps.ProjectConfig',
+    # 'inventory.apps.InventoryConfig',
+    # 'cit.apps.CitConfig',
+
     # 'scrum.apps.ScrumConfig',
     
     'import_export',
@@ -207,3 +210,5 @@ FILE_UPLOAD_MAX_SIZE = 5 * 1024 * 1024  # in megabytes
 FILE_UPLOAD_ALLOWED_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx']
 
 TIME_INPUT_FORMATS = ('%H:%M',)
+
+# AUTH_USER_MODEL = 'base.CustomUser'

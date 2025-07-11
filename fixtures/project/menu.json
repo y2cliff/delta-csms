@@ -2,6 +2,7 @@
   {
   "model": "base.menu",
   "fields": {
+    "code": "PROJ:000",
   	"name": "Project", 
     "module" : "base",
     "menu_type": "Module", 
@@ -12,6 +13,7 @@
   {
   "model": "base.menu",
   "fields": {
+    "code": "PROJ:001",
   	"name": "Dashboard", 
     "module" : "project",
     "menu_type": "Menu", 
@@ -22,6 +24,7 @@
   {
   "model": "base.menu",
   "fields": {
+    "code": "PROJ:002",
     "name": "Site", 
     "module" : "project",
     "menu_type": "Menu", 
@@ -32,6 +35,7 @@
   {
   "model": "base.menu",
   "fields": {
+    "code": "PROJ:003",
     "name": "Budget Item", 
     "module" : "project",
     "menu_type": "Menu", 
@@ -42,21 +46,12 @@
   {
   "model": "base.menu",
   "fields": {
+    "code": "PROJ:004",
     "name": "Activity", 
     "module" : "project",
     "menu_type": "Menu", 
     "url_name": "project:activity-list", 
     "icon_class": "bookmark-check"
-    }
-  }, 
-  {
-  "model": "base.menu",
-  "fields": {
-      "name": "Task", 
-      "module" : "project",
-      "menu_type": "Menu", 
-      "url_name": "project:task-list", 
-      "icon_class": "ui-checks"
     }
   }
 ]

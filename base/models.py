@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.db import models
-from django.db.models import F, Count, Q
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+# from django.db.models import F, Count, Q
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from .abstract import GetOrNoneManager, TemplateModel
@@ -18,22 +16,16 @@ def image_upload(instance, filename):
         filename=filename,
     )
 
-
-class MenuQuerySet(models.query.QuerySet):
-    def module_set(self, module):
-        return self.filter(module=module)
-
-    def my_menu(self, userprofile):
-        return self.exclude(menu_type='Module').filter(user_profile=userprofile)
-
-
-class MenuManager(models.Manager):
-    def get_queryset(self):
-        return MenuQuerySet(self.model, using=self._db)
-
-    def module_set(self, module):
-        return self.get_queryset().module_set(module=module).all()
-
+def get_user_menus(user):
+    if user.is_superuser:
+        return Menu.objects.all()
+    direct_menus = list(user.profile.menu.all())
+    group_menus = list(Menu.objects.filter(
+        groups__in=GroupProfile.objects.filter(
+            group__in=user.groups.all())))
+    combined = {menu.id: menu for menu in direct_menus + group_menus }
+    sorted_menus = sorted(combined.values(), key=lambda m: m.code.lower())
+    return sorted_menus
 
 class Menu(TemplateModel):
     MENU_TYPE = (
@@ -42,27 +34,29 @@ class Menu(TemplateModel):
          ('Menu', 'Menu'),
          ('Label', 'Label'),
     )
-    # sequence = models.PositiveIntegerField(default=0)
+    code = models.CharField(max_length=8, blank=True, null=True)
     module = models.CharField(max_length=60, blank=True, null=True)
     menu_type = models.CharField(max_length=10, default="Module", choices=MENU_TYPE)
     name = models.CharField(max_length=60, blank=True, null=True)
     url_name = models.CharField(max_length=60, blank=True, null=True)
     icon_class = models.CharField(max_length=60, blank=True, null=True)
 
-    objects = MenuManager()
-
     class Meta:
-        ordering = ['module','name']
+        ordering = ['code']
 
     def __str__(self):
         if self.module:
-            return 'Module: '+ self.module.title() + ' - Menu Name: ' + self.name + '_' + self.menu_type
+            return self.code + ' - ' + self.name + ' - ' + self.menu_type
         else:
             return self.name + '_' + self.menu_type
 
     def get_absolute_url(self):
         return reverse('menu-detail',kwargs={'pk': self.id})
 
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = 'ZZZZ-999'
+        super().save(*args, **kwargs)
 
 class UserProfile(TemplateModel):
     user = models.OneToOneField(
@@ -86,7 +80,12 @@ class UserProfile(TemplateModel):
     facebook = models.CharField(max_length=60, blank=True, null=True)
     instagram = models.CharField(max_length=60, blank=True, null=True)
     linkedin = models.CharField(max_length=60, blank=True, null=True)
-    menu = models.ManyToManyField(Menu, through='UserMenuOrder', related_name='users')
+    menu = models.ManyToManyField(
+        Menu,
+        blank=True,
+        symmetrical=False,
+        related_name='users'
+    )
 
     def __str__(self):
         return self.user.username
@@ -101,103 +100,42 @@ class UserProfile(TemplateModel):
     def get_absolute_url(self):
         return reverse('userprofile-detail',kwargs={'pk': self.pk})
 
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    # if created:
-    #     UserProfile.objects.create(user=instance)
-
-    if created:
-        # import inspect
-        # for frame_record in inspect.stack():
-        #     if frame_record[3] == 'get_response':
-        #         request = frame_record[0].f_locals['request']
-        #         break
-        #     else:
-        #         request = None
-        if User.objects.all().count() > 1:
-            UserProfile.objects.get_or_create(
-                user=instance,
-                created_by=get_current_user(),
-                updated_by=get_current_user()
-            )
-        else:
-            UserProfile.objects.get_or_create(
-                user=instance,
-                created_by_id=1,
-                updated_by_id=1
-            )
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    # instance.profile.save()
-
-    # import inspect
-    # for frame_record in inspect.stack():
-    #     if frame_record[3] == 'get_response':
-    #         request = frame_record[0].f_locals['request']
-    #         break
-    #     else:
-    #         request = None
-    if User.objects.all().count() > 1:
-        instance.profile.updated_by = get_current_user()
-        instance.profile.save()
-
-
-class MenuManager(models.Manager):
-    def get_queryset(self):
-        return MenuQuerySet(self.model, using=self._db)
-
-    def module_set(self, module):
-        return self.get_queryset().module_set(module=module).all()
-
-    def my_module_menus(self, module, user):
-        return self.get_queryset().module_set(module=module).all()
-
-
-class UserMenuQuerySet(models.query.QuerySet):
-    def my_module_menus(self, module, user):
-        return self.filter(menu__module=module, userprofile__user=user)
-
-
-class UserMenuManager(models.Manager):
-    def get_queryset(self):
-        return UserMenuQuerySet(self.model, using=self._db)
-
-    def my_module_menus(self, module, user):
-        return self.get_queryset().my_module_menus(module=module, user=user).all()
-
-
-class UserMenuOrder(TemplateModel):
-    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    order = models.PositiveIntegerField(default=0)
-
-    objects = UserMenuManager()
-
-    class Meta:
-        ordering = ['order']
-        unique_together = ('userprofile', 'menu', 'order')
+class Department(TemplateModel):
+    code = models.CharField(max_length=60, blank=True, null=True)
+    name = models.CharField(max_length=60, blank=True, null=True)
 
     def __str__(self):
-        return f"User: {self.userprofile} - Menu: {self.menu} (Order: {self.order})"
+        return self.name
+
+    class Meta:
+        verbose_name = 'Department'
 
     def get_absolute_url(self):
-        return reverse('userprofile-detail',kwargs={'pk': self.userprofile.pk})
+        return reverse('department-detail',kwargs={'pk': self.id})
 
-# -----------------------------------------------------
-# PROJECT ACCESS RESTRICTION
-# 
-# -----------------------------------------------------
+class GroupProfile(TemplateModel):
+    group = models.OneToOneField(
+        Group, 
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='profile',
+    )
+    name = models.CharField(max_length=60, blank=True, null=True)
+    menu = models.ManyToManyField(
+        Menu,
+        blank=True,
+        symmetrical=False,
+        related_name='groups'
+    )
 
-# class GroupProfile(Group):
-#     class Meta:
-#         proxy = True
+    def __str__(self):
+        name_ = self.group.name
+        if self.name:
+            name_ = self.name
+        return name_
 
-#     def get_absolute_url(self):
-#         return reverse('xystum:groupprofile-detail', kwargs={'id': self.id})
+    class Meta:
+        verbose_name = 'Group Profile'
 
-#     def has_access(self):
-#         access = Access.objects.filter(group=self.id).exists()
-#         return access
+    def get_absolute_url(self):
+        return reverse('groupprofile-detail',kwargs={'pk': self.pk})

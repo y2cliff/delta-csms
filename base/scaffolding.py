@@ -5,8 +5,8 @@ from . import forms as core_forms
 from . import models as core_models
 from . import tables as core_tables
 from . import filters as core_filters
-from .admin import UserProfileResource, MenuResource
-
+from .admin import UserProfileResource, MenuResource, DepartmentResource
+from django.contrib.auth.models import User, Group
 
 class CrudManager():
     model = core_models.UserProfile
@@ -95,14 +95,13 @@ class CrudManager():
                     page_title=self.page_title,
                     parent_menu=self.parent_menu,
                     page_name=self.page_name,
-                    # permission_required=self.model._meta.app_label + '.delete_' + self.model._meta.model_name,
+                    permission_required=self.model._meta.app_label + '.delete_' + self.model._meta.model_name,
                     url_path=self.model._meta.app_label + ':' + self.model._meta.model_name + '-list'
                 ),
                 name=self.model._meta.model_name + '-delete'
             )
         ]
         return url_patterns
-
 
 class ChildCrudManager(CrudManager):
     # CHILD
@@ -160,24 +159,24 @@ class ChildCrudManager(CrudManager):
                     extra_context=self.extra_context,
                     parent_model=self.parent_model
                 ),
-                name=self.parent_model._meta.model_name + '-'+ self.parent_model._meta.model_name + '-create'
+                name=prefix + '-create'
             ),
-            # path(
-            #     preurl + '/<int:id>/update/',
-            #     self.updateview.as_view(
-            #         extra_context=self.extra_context,
-            #         form_class=self.form_class,
-            #         model=self.model,
-            #         module=self.module,
-            #         page_title='Update ' + self.page_title,
-            #         parent_menu=self.parent_menu,
-            #         page_name=self.page_name,
-            #         parent_model=self.parent_model,
-            #         permission_required=(
-            #             self.model._meta.app_label + '.change_' + self.model._meta.model_name)
-            #     ),
-            #     name=prefix + '-update'
-            # ),
+            path(
+                preurl + '/<int:pk>/update/',
+                self.updateview.as_view(
+                    model=self.model,
+                    module=self.module,
+                    page_title='Update ' + self.page_title,
+                    parent_menu=self.parent_menu,
+                    page_name=self.page_name,
+                    form_class=self.form_class,
+                    extra_context=self.extra_context,
+                    parent_model=self.parent_model,
+                    permission_required=(
+                        self.model._meta.app_label + '.change_' + self.model._meta.model_name)
+                ),
+                name=prefix + '-update'
+            ),
             # path(
             #     preurl + '/<int:id>/delete/',
             #     self.deleteview.as_view(
@@ -196,7 +195,6 @@ class ChildCrudManager(CrudManager):
             # )
         ]
         return url_patterns
-
 
 class LineCrudManager():
     extra_context = {}
@@ -242,7 +240,7 @@ class LineCrudManager():
                     model=self.model,
                     module=self.module,
                     form_class=self.form_class,
-                    # permission_required=self.module + '.add_' + self.prefix,
+                    permission_required=self.module + '.add_' + self.prefix,
                     extra_context=self.extra_context
                 ),
                 name=self.model._meta.model_name + '-create'
@@ -270,7 +268,6 @@ class LineCrudManager():
         ]
         return url_patterns
 
-
 class MenuCrudManager(CrudManager):
     page_title = 'Menu'
     parent_menu = [['Menu','menu-list']]
@@ -278,10 +275,9 @@ class MenuCrudManager(CrudManager):
     form_class = core_forms.MenuForm
     model = core_models.Menu
     table_class = core_tables.MenuTable
-    filter_class = core_filters.MenuFilter
+    filterset_class = core_filters.MenuFilter
     module='base'
     model_resource = MenuResource
-
 
 class UserProfileCrudManager(CrudManager):
     page_title = 'User Profile'
@@ -290,23 +286,62 @@ class UserProfileCrudManager(CrudManager):
     form_class = core_forms.UserProfileForm
     model = core_models.UserProfile
     table_class = core_tables.UserProfileTable
-    filter_class = core_filters.UserProfileFilter
+    filterset_class = core_filters.UserProfileFilter
     module='base'
 
-
-class UserMenuOrderCrudManager(ChildCrudManager):
-    page_title = 'User menu'
+class UserProfileChildCrudManager(ChildCrudManager):
+    parent_model = User
+    page_title = 'User Profile'
     parent_menu = [['Settings','userprofile-list']]
-    page_name = 'User menu'
-    form_class = core_forms.UserMenuOrderForm
-    model = core_models.UserMenuOrder
-    # table_class = core_tables.UserProfileTable
-    # filter_class = core_filters.UserProfileFilter
+    page_name = 'User Profile'
+    form_class = core_forms.UserProfileForm
+    model = core_models.UserProfile
+    table_class = core_tables.UserProfileTable
+    filterset_class = core_filters.UserProfileFilter
     module='base'
 
-    parent_model = core_models.UserProfile
-    # parent_prefix = 'userprofile'
+class GroupProfileCrudManager(CrudManager):
+    page_title = 'Group Profile'
+    parent_menu = [['Settings','groupprofile-list']]
+    page_name = 'Group Profile'
+    form_class = core_forms.GroupProfileForm
+    model = core_models.GroupProfile
+    table_class = core_tables.GroupProfileTable
+    filterset_class = core_filters.GroupProfileFilter
+    module='base'
 
+class GroupProfileChildCrudManager(ChildCrudManager):
+    parent_model = Group
+    page_title = 'Group Profile'
+    parent_menu = [['Settings','groupprofile-list']]
+    page_name = 'Group Profile'
+    form_class = core_forms.GroupProfileForm
+    model = core_models.GroupProfile
+    table_class = core_tables.GroupProfileTable
+    filterset_class = core_filters.GroupProfileFilter
+    module='base'
 
+# class UserMenuOrderCrudManager(ChildCrudManager):
+#     page_title = 'User menu'
+#     parent_menu = [['Settings','userprofile-list']]
+#     page_name = 'User menu'
+#     form_class = core_forms.UserMenuOrderForm
+#     model = core_models.UserMenuOrder
+#     # table_class = core_tables.UserProfileTable
+#     # filter_class = core_filters.UserProfileFilter
+#     module='base'
+
+#     parent_model = core_models.UserProfile
+#     # parent_prefix = 'userprofile'
+
+class DepartmentCrudManager(CrudManager):
+    page_title = 'Department'
+    parent_menu = [['Settings','department-list']]
+    page_name = 'Department'
+    form_class = core_forms.DepartmentForm
+    model = core_models.Department
+    table_class = core_tables.DepartmentTable
+    filterset_class = core_filters.DepartmentFilter
+    module='base'
 
 
